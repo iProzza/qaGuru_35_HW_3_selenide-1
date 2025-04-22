@@ -4,6 +4,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Condition.text;
@@ -20,6 +21,7 @@ public class EnterprisesHoverTests {
     }
 
     @Test
+    @DisplayName("Открытие страницы Enterprize")
     void enterprisesHoverTest() {
         open("https://github.com");
         $$("button[class^='HeaderMenu-link']").findBy(text("Solutions")).hover();
@@ -28,19 +30,30 @@ public class EnterprisesHoverTests {
     }
 
     @Test
-    void dragNDropSquareTest() {
+    @DisplayName("Перемещение элементов с помощью actions()")
+    void moveElementByActionsTest() {
         open("https://the-internet.herokuapp.com/drag_and_drop");
 
-        // Вариант 1
-        SelenideElement source = $("#column-a");
-        SelenideElement target = $("#column-b");
-
-        Selenide.actions().dragAndDrop(source, target).perform();
-        source.shouldHave(text("B"));
-
-        // Вариант 2, но в таком исполнении dragAndDropTo в статусе deprecated
-        $("#column-a").dragAndDropTo("#column-b");
         $("#column-a").shouldHave(text("A"));
+        $("#column-b").shouldHave(text("B"));
+
+        actions().clickAndHold($("#column-a")).moveToElement($("#column-b")).release().perform();
+
+        $("#column-a").shouldHave(text("B"));
+
+    }
+
+    @Test
+    @DisplayName("Перемещение элементов с помощью dragAndDrop()")
+    void moveElementByDragBDropTest() {
+        open("https://the-internet.herokuapp.com/drag_and_drop");
+
+        $("#column-a").shouldHave(text("A"));
+        $("#column-b").shouldHave(text("B"));
+
+//        $("#column-a").dragAndDrop($("#column-b")); // Ошибка приведения типов данных
+
+        $("#column-a").shouldHave(text("B"));
     }
 
 }
